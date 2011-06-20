@@ -60,7 +60,9 @@ static int servertime_handler(request_rec *r)
     uint64_t restime = 0;
 
     restime = t.tv_sec * 1000;
-    restime += t.tv_usec / 1000;
+    if (t.tv_usec > 1000) {
+        restime += t.tv_usec / 1000;
+    }
 
     ap_rprintf(r, "%"PRIu64"\n", restime);
 
