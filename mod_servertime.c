@@ -42,6 +42,8 @@
 #include "http_protocol.h"
 #include "ap_config.h"
 
+#include <inttypes.h>
+
 /* The sample content handler */
 static int servertime_handler(request_rec *r)
 {
@@ -54,10 +56,13 @@ static int servertime_handler(request_rec *r)
         return OK;
 
     struct timeval t;
-
     gettimeofday(&t, NULL);
+    uint64_t restime = 0;
 
-    ap_rprintf(r, "%ld\n", (t.tv_sec * 1000) + (t.tv_usec / 1000));
+    restime = t.tv_sec * 1000;
+    restime += t.tv_usec / 1000;
+
+    ap_rprintf(r, "%"PRIu64"\n", restime);
 
     return OK;
 }
